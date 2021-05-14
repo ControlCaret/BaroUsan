@@ -15,4 +15,5 @@ RUN apt-get install -y php7.3-mysqli
 
 EXPOSE 80
 
+CMD echo "ServerName localhost" >> /etc/apache2/apache2.conf
 CMD ["apachectl", "-D", "FOREGROUND"]
