@@ -9,19 +9,32 @@
         exit();
     }
 
-    $sql = 
-    "
-        CREATE TABLE IF NOT EXISTS History (
-            num INT NOT NULL AUTO_INCREMENT,
-            name char(8) NOT NULL,
-            id CHAR(32) NOT NULL,
-            status TINYINT(1) NOT NULL,
-            date TIMESTAMP DEFAULT NOW() NOT NULL,
-            PRIMARY KEY(num)
-        );
-    ";
-    $mysqli -> query($sql);
-    
+    # Create Table If not Exists
+    $sql = "SHOW TABLES LIKE 'History';";
+    $result = $mysqli -> query($sql);
+    echo $result -> num_rows;
+    if($result -> num_rows == 0)
+    {
+        echo "<script>console.log('Table Not Exists')</script>";
+        $sql = 
+        "
+            CREATE TABLE History (
+                num INT NOT NULL AUTO_INCREMENT,
+                name char(8) NOT NULL,
+                id CHAR(32) NOT NULL,
+                status TINYINT(1) NOT NULL,
+                date TIMESTAMP DEFAULT NOW() NOT NULL,
+                PRIMARY KEY(num)
+            );
+        ";
+        $result = $mysqli -> query($sql);
+        if($result === TRUE)
+            echo "<script>console.log('Table Created')</script>";
+        else
+            echo "<script>console.log('Table Not Created')</script>";
+    }
+    else
+        echo "<script>console.log('Table Exists')</script>";
 ?>
 <html lang="ko">
 <head>
@@ -55,6 +68,5 @@
 
     ?>
 
-    
 </body>
 </html>
