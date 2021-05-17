@@ -5,19 +5,18 @@
 
     if ($mysqli -> connect_errno)
     {
-        echo "<script>console.log(\"Failed to connect to MySQL : { $mysqli -> connect_error }\")</script>";
+        echo "<script>console.error(\"Failed to connect to MySQL : { $mysqli -> connect_error }\")</script>";
         exit();
     }
 
     # Create Table If not Exists
     $sql = "SHOW TABLES LIKE 'History';";
     $result = $mysqli -> query($sql);
-    echo $result -> num_rows;
     if($result -> num_rows == 0)
     {
-        echo "<script>console.log('Table Not Exists')</script>";
+        echo "<script>console.warn('Table Not Exists')</script>";
         $sql = 
-        "
+        '
             CREATE TABLE History (
                 num INT NOT NULL AUTO_INCREMENT,
                 name char(8) NOT NULL,
@@ -26,12 +25,12 @@
                 date TIMESTAMP DEFAULT NOW() NOT NULL,
                 PRIMARY KEY(num)
             );
-        ";
+        ';
         $result = $mysqli -> query($sql);
         if($result === TRUE)
-            echo "<script>console.log('Table Created')</script>";
+            echo "<script>console.info('Table Created')</script>";
         else
-            echo "<script>console.log('Table Not Created')</script>";
+            echo "<script>console.error('Table Not Created')</script>";
     }
     else
         echo "<script>console.log('Table Exists')</script>";
@@ -44,7 +43,7 @@
     <title>바로우산</title>
 </head>
 <body>
-    
+    <div id="qr-reader" style="width:500px"></div>
     <form action="input.php" method="POST">
         <input type="text" name="name">
         <input type="text" name="id">
@@ -52,21 +51,37 @@
         <input type="submit">
     </form>
 
-    <?php
-    
-    $sql = 
-    '
-        SELECT * FROM History;
-    ';
-    $result = $mysqli -> query($sql);
 
-    while($row = $result -> fetch_assoc())
-    {
-        echo $row['num'] . " " . $row['name'] . " " . $row['id'] . " " . $row['status'] . " " . $row['date'] . "<br>";
-    }
-    $result -> free();
+    <table>
+        <tr>
+            <th>num</th>
+            <th>name</th>
+            <th>id</th>
+            <th>status</th>
+            <th>date</th>
+        </tr>
+        <?php
+        
+        $sql = 'SELECT * FROM History ORDER BY NUM DESC;';
+        $result = $mysqli -> query($sql);
 
-    ?>
+        while($row = $result -> fetch_assoc())
+        {
+            echo "
+                <tr>
+                    <td>$row[num]</td>
+                    <td>$row[name]</td>
+                    <td>$row[id]</td>
+                    <td>$row[status]</td>
+                    <td>$row[date]</td>
+                </tr>
+            ";
+        }
+        $result -> free();
+        ?>
+    </table>
 
 </body>
+<script src="./script/html5-qrcode.min.js"></script>
+<script src="./script/script.js"></script>
 </html>
