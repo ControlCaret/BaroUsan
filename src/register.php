@@ -6,7 +6,7 @@
     if ($mysqli -> connect_errno)
     {
         echo "<script>console.log(\"Failed to connect to MySQL : { $mysqli -> connect_error }\")</script>";
-        exit();
+        die();
     }
 
     $card_id = $_POST['card_id'];
@@ -19,11 +19,13 @@
     
     if($mysqli -> query($sql) === TRUE)
     {
-        echo "added";
+        //echo "added";
+        echo "<script>window.location.href=\"./\";</script>"; 
     }
     else
     {
-        echo "failed";
+        echo "<script>alert(\"오류\");</script>";
+        echo "<script>window.location.href=\"./\";</script>"; 
     }
 
     $mysqli -> close();

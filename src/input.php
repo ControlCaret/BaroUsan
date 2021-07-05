@@ -16,16 +16,24 @@
     $result = $mysqli -> query($sql);
     $name = mysqli_fetch_row($result);
 
+    if(!isset($name[0]))
+    {
+        echo "<script>alert(\"학생증이 등록되어 있지 않습니다.\");</script>";
+        echo "<script>window.location.href=\"./\";</script>"; 
+        exit();
+    }
 
     $sql = "INSERT INTO History (name, card_id, umbrella_id) VALUES('$name[0]', '$card_id', '$umbrella_id')";
     
     if($mysqli -> query($sql) === TRUE)
     {
-        echo "added";
+        //echo "added";
+        echo "<script>window.location.href=\"./\";</script>"; 
     }
     else
     {
-        echo "failed";
+        echo "<script>alert(\"오류\");</script>";
+        echo "<script>window.location.href=\"./\";</script>"; 
     }
 
     $mysqli -> close();
